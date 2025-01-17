@@ -1,6 +1,6 @@
 const local: App.I18n.Schema = {
   system: {
-    title: 'SoybeanAdmin',
+    title: 'XencioAdmin',
     updateTitle: 'System Version Update Notification',
     updateContent: 'A new version of the system has been detected. Do you want to refresh the page immediately?',
     updateConfirm: 'Refresh immediately',
@@ -154,6 +154,8 @@ const local: App.I18n.Schema = {
     }
   },
   route: {
+    box: 'Box',
+    box_summary: 'Box Summary',
     login: 'Login',
     403: 'No Permission',
     404: 'Page Not Found',
@@ -414,6 +416,12 @@ const local: App.I18n.Schema = {
         gender: {
           male: 'Male',
           female: 'Female'
+        }
+      },
+      box: {
+        summary: {
+          addService: 'add box service',
+          editService: 'edit box service'
         }
       },
       menu: {

@@ -96,6 +96,29 @@ export const generatedRoutes: GeneratedRoute[] = [
     ]
   },
   {
+    name: 'box',
+    path: '/box',
+    component: 'layout.base',
+    meta: {
+      title: 'box',
+      i18nKey: 'route.box',
+      order: 2,
+      icon: 'clarity:plugin-line'
+    },
+    children: [
+      {
+        name: 'box_summary',
+        path: '/box/summary',
+        component: 'view.box_summary',
+        meta: {
+          title: 'box_summary',
+          i18nKey: 'route.box_summary',
+          order: 1
+        }
+      }
+    ]
+  },
+  {
     name: 'function',
     path: '/function',
     component: 'layout.base',

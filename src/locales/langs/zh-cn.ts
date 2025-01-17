@@ -1,6 +1,6 @@
 const local: App.I18n.Schema = {
   system: {
-    title: 'Soybean 管理系统',
+    title: 'Xencio  银企通管理系统',
     updateTitle: '系统版本更新通知',
     updateContent: '检测到系统有新版本发布，是否立即刷新页面？',
     updateConfirm: '立即刷新',
@@ -154,6 +154,8 @@ const local: App.I18n.Schema = {
     }
   },
   route: {
+    box: '银企通',
+    box_summary: '银企通概览',
     login: '登录',
     403: '无权限',
     404: '页面不存在',
@@ -483,6 +485,12 @@ const local: App.I18n.Schema = {
           iconify: 'iconify图标',
           local: '本地图标'
         }
+      }
+    },
+    box: {
+      summary: {
+        addService: '新增银企通服务',
+        editService: '编辑银企通服务'
       }
     }
   },

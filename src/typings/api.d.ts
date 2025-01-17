@@ -222,4 +222,37 @@ declare namespace Api {
       children?: MenuTree[];
     };
   }
+
+  namespace Box {
+    interface Summary extends Common.CommonRecord {
+      /** environment: X, GO, ICBC */
+      environment: string;
+      /** is multi-tenant */
+      isMultiTenant: boolean;
+      /** customer name */
+      customerName: string;
+      /** service url */
+      serviceUrl: string;
+      /** login username */
+      username: string;
+      /** login password */
+      password?: string;
+      /** remarks */
+      remark?: string;
+      opsDoc?: string;
+    }
+    type SummaryList = Common.PaginatingQueryRecord<Summary>;
+
+    /** search params */
+    interface SearchParams extends Common.CommonSearchParams {
+      environment?: string | null;
+      customerName?: string | null;
+    }
+
+    /** create model */
+    type CreateSummary = Omit<Summary, keyof Common.CommonRecord>;
+
+    /** update model */
+    type UpdateSummary = Partial<CreateSummary>;
+  }
 }

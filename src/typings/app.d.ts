@@ -658,6 +658,12 @@ declare namespace App {
             };
           };
         };
+        box: {
+          summary: {
+            addService: string;
+            editService: string;
+          };
+        };
       };
       form: {
         required: string;
