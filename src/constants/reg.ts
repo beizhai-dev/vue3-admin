@@ -7,16 +7,15 @@ export const REG_PHONE =
 /**
  * Password reg
  *
- * 6-18 characters, including letters, numbers, and underscores
+ * 6-18 characters, including letters, numbers, and underscores可以包含特殊符号
  */
-export const REG_PWD = /^\w{6,18}$/;
+export const REG_PWD = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{6,18}$/;
 
 /** Email reg */
 export const REG_EMAIL = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
 
 /** Six digit code reg */
 export const REG_CODE_SIX = /^\d{6}$/;
-
 /** Four digit code reg */
 export const REG_CODE_FOUR = /^\d{4}$/;
 

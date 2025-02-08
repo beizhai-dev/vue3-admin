@@ -3,7 +3,8 @@ import { computed, reactive } from 'vue';
 import { $t } from '@/locales';
 import { useRouterPush } from '@/hooks/common/router';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
-
+import { useOwlEyes } from './owl-mixin';
+const { handleFocus, handleBlur } = useOwlEyes();
 defineOptions({
   name: 'ResetPwd'
 });
@@ -58,6 +59,8 @@ async function handleSubmit() {
         type="password"
         show-password-on="click"
         :placeholder="$t('page.login.common.passwordPlaceholder')"
+        @focus="handleFocus"
+        @blur="handleBlur"
       />
     </NFormItem>
     <NFormItem path="confirmPassword">
@@ -66,6 +69,8 @@ async function handleSubmit() {
         type="password"
         show-password-on="click"
         :placeholder="$t('page.login.common.confirmPasswordPlaceholder')"
+        @focus="handleFocus"
+        @blur="handleBlur"
       />
     </NFormItem>
     <NSpace vertical :size="18" class="w-full">

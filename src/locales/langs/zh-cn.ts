@@ -1,6 +1,6 @@
 const local: App.I18n.Schema = {
   system: {
-    title: 'Xencio  银企通管理系统',
+    title: 'Xencio银企通',
     updateTitle: '系统版本更新通知',
     updateContent: '检测到系统有新版本发布，是否立即刷新页面？',
     updateConfirm: '立即刷新',
@@ -9,6 +9,7 @@ const local: App.I18n.Schema = {
   common: {
     action: '操作',
     add: '新增',
+    auth: '授权',
     addSuccess: '添加成功',
     backToHome: '返回首页',
     batchDelete: '批量删除',
@@ -21,6 +22,7 @@ const local: App.I18n.Schema = {
     confirm: '确认',
     delete: '删除',
     deleteSuccess: '删除成功',
+    deleteError: '删除失败',
     confirmDelete: '确认删除吗？',
     edit: '编辑',
     warning: '警告',
@@ -231,7 +233,7 @@ const local: App.I18n.Schema = {
     login: {
       common: {
         loginOrRegister: '登录 / 注册',
-        userNamePlaceholder: '请输入用户名',
+        usernamePlaceholder: '请输入用户名',
         phonePlaceholder: '请输入手机号',
         codePlaceholder: '请输入验证码',
         passwordPlaceholder: '请输入密码',
@@ -241,7 +243,7 @@ const local: App.I18n.Schema = {
         back: '返回',
         validateSuccess: '验证成功',
         loginSuccess: '登录成功',
-        welcomeBack: '欢迎回来，{userName} ！'
+        welcomeBack: '欢迎回来，{username} ！'
       },
       pwdLogin: {
         title: '密码登录',
@@ -276,7 +278,7 @@ const local: App.I18n.Schema = {
     },
     about: {
       title: '关于',
-      introduction: `SoybeanAdmin 是一个优雅且功能强大的后台管理模板，基于最新的前端技术栈，包括 Vue3, Vite5, TypeScript, Pinia 和 UnoCSS。它内置了丰富的主题配置和组件，代码规范严谨，实现了自动化的文件路由系统。此外，它还采用了基于 ApiFox 的在线Mock数据方案。SoybeanAdmin 为您提供了一站式的后台管理解决方案，无需额外配置，开箱即用。同样是一个快速学习前沿技术的最佳实践。`,
+      introduction: `XencioAdmin 是一个优雅且功能强大的后台管理模板，基于最新的前端技术栈，包括 Vue3, Vite5, TypeScript, Pinia 和 UnoCSS。它内置了丰富的主题配置和组件，代码规范严谨，实现了自动化的文件路由系统。此外，它还采用了基于 ApiFox 的在线Mock数据方案。XencioAdmin 为您提供了一站式的后台管理解决方案，无需额外配置，开箱即用。同样是一个快速学习前沿技术的最佳实践。`,
       projectInfo: {
         title: '项目信息',
         version: '版本',
@@ -290,7 +292,7 @@ const local: App.I18n.Schema = {
     home: {
       branchDesc:
         '为了方便大家开发和更新合并，我们对main分支的代码进行了精简，只保留了首页菜单，其余内容已移至example分支进行维护。预览地址显示的内容即为example分支的内容。',
-      greeting: '早安，{userName}, 今天又是充满活力的一天!',
+      greeting: '早安，{username}, 今天又是充满活力的一天!',
       weatherDesc: '今日多云转晴，20℃ - 25℃!',
       projectCount: '项目数',
       todo: '待办',
@@ -308,11 +310,11 @@ const local: App.I18n.Schema = {
       projectNews: {
         title: '项目动态',
         moreNews: '更多动态',
-        desc1: 'Soybean 在2021年5月28日创建了开源项目 soybean-admin!',
-        desc2: 'Yanbowe 向 soybean-admin 提交了一个bug，多标签栏不会自适应。',
-        desc3: 'Soybean 准备为 soybean-admin 的发布做充分的准备工作!',
-        desc4: 'Soybean 正在忙于为soybean-admin写项目说明文档！',
-        desc5: 'Soybean 刚才把工作台页面随便写了一些，凑合能看了！'
+        desc1: 'Xencio 在2021年5月28日创建了开源项目 Xencio-admin!',
+        desc2: 'Yanbowe 向 Xencio-admin 提交了一个bug，多标签栏不会自适应。',
+        desc3: 'Xencio 准备为 Xencio-admin 的发布做充分的准备工作!',
+        desc4: 'Xencio 正在忙于为Xencio-admin写项目说明文档！',
+        desc5: 'Xencio 刚才把工作台页面随便写了一些，凑合能看了！'
       },
       creativity: '创意'
     },
@@ -395,7 +397,7 @@ const local: App.I18n.Schema = {
       },
       user: {
         title: '用户列表',
-        userName: '用户名',
+        username: '用户名',
         userGender: '性别',
         nickName: '昵称',
         userPhone: '手机号',
@@ -403,7 +405,7 @@ const local: App.I18n.Schema = {
         userStatus: '用户状态',
         userRole: '用户角色',
         form: {
-          userName: '请输入用户名',
+          username: '请输入用户名',
           userGender: '请选择性别',
           nickName: '请输入昵称',
           userPhone: '请输入手机号',
@@ -425,6 +427,8 @@ const local: App.I18n.Schema = {
         parentId: '父级菜单ID',
         menuType: '菜单类型',
         menuName: '菜单名称',
+        permissionName: '权限名称',
+        directoryName: '目录名称',
         routeName: '路由名称',
         routePath: '路由路径',
         pathParam: '路径参数',
@@ -451,9 +455,12 @@ const local: App.I18n.Schema = {
           home: '请选择首页',
           menuType: '请选择菜单类型',
           menuName: '请输入菜单名称',
+          permissionName: '请输入权限名称',
+          directoryName: '请输入目录名称',
           routeName: '请输入路由名称',
           routePath: '请输入路由路径',
           pathParam: '请输入路径参数',
+          permission: '请输入权限编码',
           page: '请选择页面组件',
           layout: '请选择布局组件',
           i18nKey: '请输入国际化key',
@@ -477,9 +484,11 @@ const local: App.I18n.Schema = {
         addMenu: '新增菜单',
         editMenu: '编辑菜单',
         addChildMenu: '新增子菜单',
+        addPermission: '新增权限',
         type: {
           directory: '目录',
-          menu: '菜单'
+          menu: '菜单',
+          permission: '权限'
         },
         iconType: {
           iconify: 'iconify图标',
@@ -490,13 +499,19 @@ const local: App.I18n.Schema = {
     box: {
       summary: {
         addService: '新增银企通服务',
-        editService: '编辑银企通服务'
+        editService: '编辑银企通服务',
+        environment: {
+          X: 'X',
+          GO: 'GO',
+          ICBC: '工银SAAS',
+          LOCAL: '本地客户'
+        }
       }
     }
   },
   form: {
     required: '不能为空',
-    userName: {
+    username: {
       required: '请输入用户名',
       invalid: '用户名格式不正确'
     },

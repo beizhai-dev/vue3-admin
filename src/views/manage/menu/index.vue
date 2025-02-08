@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import type { Ref } from 'vue';
 import { NButton, NPopconfirm, NTag } from 'naive-ui';
 import { useBoolean } from '@sa/hooks';
-import { fetchGetAllPages, fetchGetMenuList } from '@/service/api';
+import { fetchBatchDeleteMenu, fetchDeleteMenu, fetchGetAllPages, fetchGetMenuList } from '@/service/api';
 import { useAppStore } from '@/store/modules/app';
 import { useTable, useTableOperate } from '@/hooks/common/table';
 import { $t } from '@/locales';
@@ -18,44 +18,53 @@ const { bool: visible, setTrue: openModal } = useBoolean();
 
 const wrapperRef = ref<HTMLElement | null>(null);
 
-const { columns, columnChecks, data, loading, pagination, getData, getDataByPage } = useTable({
+const { columns, columnChecks, data, loading, getData } = useTable({
   apiFn: fetchGetMenuList,
+  needPagination: false,
   columns: () => [
     {
       type: 'selection',
-      align: 'center',
-      width: 48
+      fixed: 'left',
+      width: 50
     },
     {
-      key: 'id',
-      title: $t('page.manage.menu.id'),
+      title: '序号',
+      key: 'index',
+      width: 60,
       align: 'center'
     },
     {
-      key: 'menuType',
+      key: 'id',
+      width: 60,
+      title: $t('page.manage.menu.id'),
+      align: 'left'
+    },
+    {
+      key: 'type',
       title: $t('page.manage.menu.menuType'),
       align: 'center',
       width: 80,
       render: row => {
         const tagMap: Record<Api.SystemManage.MenuType, NaiveUI.ThemeColor> = {
-          1: 'default',
-          2: 'primary'
+          0: 'default',
+          1: 'primary',
+          2: 'warning'
         };
 
-        const label = $t(menuTypeRecord[row.menuType]);
+        const label = $t(menuTypeRecord[row.type]);
 
-        return <NTag type={tagMap[row.menuType]}>{label}</NTag>;
+        return <NTag type={tagMap[row.type]}>{label}</NTag>;
       }
     },
     {
-      key: 'menuName',
+      key: 'name',
       title: $t('page.manage.menu.menuName'),
-      align: 'center',
-      minWidth: 120,
+      align: 'left',
+      minWidth: 100,
       render: row => {
-        const { i18nKey, menuName } = row;
+        const { i18nKey, name } = row;
 
-        const label = i18nKey ? $t(i18nKey) : menuName;
+        const label = i18nKey ? $t(i18nKey) : name;
 
         return <span>{label}</span>;
       }
@@ -67,26 +76,24 @@ const { columns, columnChecks, data, loading, pagination, getData, getDataByPage
       width: 60,
       render: row => {
         const icon = row.iconType === '1' ? row.icon : undefined;
-
         const localIcon = row.iconType === '2' ? row.icon : undefined;
-
-        return (
+        return row.type !== 2 ? (
           <div class="flex-center">
             <SvgIcon icon={icon} localIcon={localIcon} class="text-icon" />
           </div>
-        );
+        ) : null;
       }
     },
+    // {
+    //   key: 'routeName',
+    //   title: $t('page.manage.menu.routeName'),
+    //   align: 'left',
+    //   minWidth: 50
+    // },
     {
-      key: 'routeName',
-      title: $t('page.manage.menu.routeName'),
-      align: 'center',
-      minWidth: 120
-    },
-    {
-      key: 'routePath',
+      key: 'path',
       title: $t('page.manage.menu.routePath'),
-      align: 'center',
+      align: 'left',
       minWidth: 120
     },
     {
@@ -134,7 +141,13 @@ const { columns, columnChecks, data, loading, pagination, getData, getDataByPage
       align: 'center'
     },
     {
-      key: 'order',
+      key: 'permission',
+      title: $t('page.manage.menu.type.permission'),
+      align: 'left',
+      width: 120
+    },
+    {
+      key: 'orderNo',
       title: $t('page.manage.menu.order'),
       align: 'center',
       width: 60
@@ -144,28 +157,36 @@ const { columns, columnChecks, data, loading, pagination, getData, getDataByPage
       title: $t('common.operate'),
       align: 'center',
       width: 230,
-      render: row => (
-        <div class="flex-center justify-end gap-8px">
-          {row.menuType === '1' && (
-            <NButton type="primary" ghost size="small" onClick={() => handleAddChildMenu(row)}>
-              {$t('page.manage.menu.addChildMenu')}
+      fixed: 'right',
+      render: row => {
+        return (
+          <div class="flex-center gap-8px">
+            {row.type === 0 && (
+              <NButton size="small" type="primary" ghost onClick={() => handleAddChildMenu(row)}>
+                {$t('page.manage.menu.addChildMenu')}
+              </NButton>
+            )}
+            {row.type === 1 && (
+              <NButton size="small" type="primary" ghost onClick={() => handleAddPermission(row)}>
+                {$t('page.manage.menu.addPermission')}
+              </NButton>
+            )}
+            <NButton size="small" type="primary" ghost onClick={() => handleEdit(row)}>
+              {$t('common.edit')}
             </NButton>
-          )}
-          <NButton type="primary" ghost size="small" onClick={() => handleEdit(row)}>
-            {$t('common.edit')}
-          </NButton>
-          <NPopconfirm onPositiveClick={() => handleDelete(row.id)}>
-            {{
-              default: () => $t('common.confirmDelete'),
-              trigger: () => (
-                <NButton type="error" ghost size="small">
-                  {$t('common.delete')}
-                </NButton>
-              )
-            }}
-          </NPopconfirm>
-        </div>
-      )
+            <NPopconfirm onPositiveClick={() => handleDelete(row.id)}>
+              {{
+                default: () => $t('common.confirmDelete'),
+                trigger: () => (
+                  <NButton size="small" type="primary" ghost>
+                    {$t('common.delete')}
+                  </NButton>
+                )
+              }}
+            </NPopconfirm>
+          </div>
+        );
+      }
     }
   ]
 });
@@ -173,23 +194,18 @@ const { columns, columnChecks, data, loading, pagination, getData, getDataByPage
 const { checkedRowKeys, onBatchDeleted, onDeleted } = useTableOperate(data, getData);
 
 const operateType = ref<OperateType>('add');
-
 function handleAdd() {
   operateType.value = 'add';
   openModal();
 }
 
 async function handleBatchDelete() {
-  // request
-  console.log(checkedRowKeys.value);
-
+  await fetchBatchDeleteMenu(checkedRowKeys.value);
   onBatchDeleted();
 }
 
-function handleDelete(id: number) {
-  // request
-  console.log(id);
-
+async function handleDelete(id: number) {
+  await fetchDeleteMenu(id);
   onDeleted();
 }
 
@@ -211,6 +227,14 @@ function handleAddChildMenu(item: Api.SystemManage.Menu) {
   openModal();
 }
 
+function handleAddPermission(item: Api.SystemManage.Menu) {
+  operateType.value = 'addPermission';
+
+  editingData.value = { ...item };
+
+  openModal();
+}
+
 const allPages = ref<string[]>([]);
 
 async function getAllPages() {
@@ -223,12 +247,12 @@ function init() {
 }
 
 // init
-init();
+//  init();
 </script>
 
 <template>
-  <div ref="wrapperRef" class="flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
-    <NCard :title="$t('page.manage.menu.title')" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
+  <div ref="wrapperRef" class="flex-col-stretch gap-16px overflow-hidden">
+    <NCard :title="$t('page.manage.menu.title')" :bordered="false" size="small" class="flex-1-hidden">
       <template #header-extra>
         <TableHeaderOperation
           v-model:columns="columnChecks"
@@ -245,11 +269,11 @@ init();
         :data="data"
         size="small"
         :flex-height="!appStore.isMobile"
-        :scroll-x="1088"
+        :scroll-x="1400"
         :loading="loading"
         :row-key="row => row.id"
         remote
-        :pagination="pagination"
+        :pagination="false"
         class="sm:h-full"
       />
       <MenuOperateModal
@@ -257,7 +281,7 @@ init();
         :operate-type="operateType"
         :row-data="editingData"
         :all-pages="allPages"
-        @submitted="getDataByPage"
+        @submitted="getData"
       />
     </NCard>
   </div>

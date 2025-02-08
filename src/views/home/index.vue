@@ -16,7 +16,9 @@ const gap = computed(() => (appStore.isMobile ? 0 : 16));
 <template>
   <NSpace vertical :size="16">
     <HeaderBanner />
-    <CardData />
+    <LookForward></LookForward>
+    <!--
+ <CardData />
     <NGrid :x-gap="gap" :y-gap="16" responsive="screen" item-responsive>
       <NGi span="24 s:24 m:14">
         <NCard :bordered="false" class="card-wrapper">
@@ -37,6 +39,7 @@ const gap = computed(() => (appStore.isMobile ? 0 : 16));
         <CreativityBanner />
       </NGi>
     </NGrid>
+-->
   </NSpace>
 </template>
 

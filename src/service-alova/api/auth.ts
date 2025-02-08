@@ -3,11 +3,11 @@ import { alova } from '../request';
 /**
  * Login
  *
- * @param userName User name
+ * @param username User name
  * @param password Password
  */
-export function fetchLogin(userName: string, password: string) {
-  return alova.Post<Api.Auth.LoginToken>('/auth/login', { userName, password });
+export function fetchLogin(username: string, password: string) {
+  return alova.Post<Api.Auth.LoginToken>('/auth/login', { username, password });
 }
 
 /** Get user info */
@@ -46,11 +46,11 @@ export function fetchRefreshToken(refreshToken: string) {
  * return custom backend error
  *
  * @param code error code
- * @param msg error message
+ * @param message error message
  */
-export function fetchCustomBackendError(code: string, msg: string) {
+export function fetchCustomBackendError(code: string, message: string) {
   return alova.Get('/auth/error', {
-    params: { code, msg },
+    params: { code, message },
     shareRequest: false
   });
 }

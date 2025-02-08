@@ -6,9 +6,7 @@ defineOptions({
 
 <template>
   <DarkModeContainer class="h-full flex-center">
-    <a href="https://github.com/soybeanjs/soybean-admin/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">
-      Copyright MIT © 2021 Soybean
-    </a>
+    <a href="https://www.xencio.com/cn/" target="_blank" rel="noopener noreferrer">Copyright MIT © 2025 Xencio</a>
   </DarkModeContainer>
 </template>
 

@@ -8,20 +8,27 @@ declare namespace Api {
     /** common params of paginating */
     interface PaginatingCommonParams {
       /** current page number */
-      current: number;
+      page: number;
       /** page size */
-      size: number;
+      pageSize: number;
       /** total count */
       total: number;
     }
-
+    interface PaginatingCommonMeta {
+      totalItems: number;
+      itemCount: number;
+      itemsPerPage: number;
+      totalPages: number;
+      currentPage: number;
+    }
     /** common params of paginating query list data */
-    interface PaginatingQueryRecord<T = any> extends PaginatingCommonParams {
-      records: T[];
+    interface PaginatingQueryRecord<T = any> {
+      items: T[];
+      meta: PaginatingCommonMeta;
     }
 
     /** common search params of table */
-    type CommonSearchParams = Pick<Common.PaginatingCommonParams, 'current' | 'size'>;
+    type CommonSearchParams = Pick<Common.PaginatingCommonParams, 'page' | 'pageSize'>;
 
     /**
      * enable status
@@ -46,6 +53,11 @@ declare namespace Api {
       /** record status */
       status: EnableStatus | null;
     } & T;
+    type CommonOperateResponse<T = any> = {
+      code: number;
+      message: string;
+      data: T;
+    };
   }
 
   /**
@@ -61,9 +73,20 @@ declare namespace Api {
 
     interface UserInfo {
       userId: string;
-      userName: string;
+      username: string;
       roles: string[];
       buttons: string[];
+    }
+
+    interface CaptchaResult {
+      img: string;
+      id: string;
+    }
+    interface LoginParams {
+      username: string;
+      password: string;
+      verifyCode: string;
+      captchaId: string;
     }
   }
 
@@ -91,7 +114,7 @@ declare namespace Api {
    * backend api module: "systemManage"
    */
   namespace SystemManage {
-    type CommonSearchParams = Pick<Common.PaginatingCommonParams, 'current' | 'size'>;
+    type CommonSearchParams = Pick<Common.PaginatingCommonParams, 'page' | 'pageSize'>;
 
     /** role */
     type Role = Common.CommonRecord<{
@@ -125,7 +148,7 @@ declare namespace Api {
     /** user */
     type User = Common.CommonRecord<{
       /** user name */
-      userName: string;
+      username: string;
       /** user gender */
       userGender: UserGender | null;
       /** user nick name */
@@ -140,7 +163,7 @@ declare namespace Api {
 
     /** user search params */
     type UserSearchParams = CommonType.RecordNullable<
-      Pick<Api.SystemManage.User, 'userName' | 'userGender' | 'nickName' | 'userPhone' | 'userEmail' | 'status'> &
+      Pick<Api.SystemManage.User, 'username' | 'userGender' | 'nickName' | 'userPhone' | 'userEmail' | 'status'> &
         CommonSearchParams
     >;
 
@@ -150,10 +173,11 @@ declare namespace Api {
     /**
      * menu type
      *
-     * - "1": directory
-     * - "2": menu
+     * - "0": directory
+     * - "1": menu
+     * - "2": button
      */
-    type MenuType = '1' | '2';
+    type MenuType = 0 | 1 | 2;
 
     type MenuButton = {
       /**
@@ -179,7 +203,7 @@ declare namespace Api {
       | 'i18nKey'
       | 'keepAlive'
       | 'constant'
-      | 'order'
+      | 'orderNo'
       | 'href'
       | 'hideInMenu'
       | 'activeMenu'
@@ -189,24 +213,25 @@ declare namespace Api {
     >;
 
     type Menu = Common.CommonRecord<{
+      id: number;
       /** parent menu id */
       parentId: number;
       /** menu type */
-      menuType: MenuType;
+      type: MenuType;
       /** menu name */
-      menuName: string;
+      name: string;
       /** route name */
-      routeName: string;
+      routeName?: string;
       /** route path */
-      routePath: string;
+      path: string;
       /** component */
       component?: string;
+      /** permission */
+      permission?: string;
       /** iconify icon name or local icon name */
       icon: string;
       /** icon type */
       iconType: IconType;
-      /** buttons */
-      buttons?: MenuButton[] | null;
       /** children menu */
       children?: Menu[] | null;
     }> &
@@ -218,13 +243,14 @@ declare namespace Api {
     type MenuTree = {
       id: number;
       label: string;
-      pId: number;
+      pid: number;
       children?: MenuTree[];
     };
   }
 
   namespace Box {
-    interface Summary extends Common.CommonRecord {
+    type Summary = Common.CommonRecord<{
+      index: number;
       /** environment: X, GO, ICBC */
       environment: string;
       /** is multi-tenant */
@@ -240,15 +266,13 @@ declare namespace Api {
       /** remarks */
       remark?: string;
       opsDoc?: string;
-    }
+    }>;
     type SummaryList = Common.PaginatingQueryRecord<Summary>;
 
-    /** search params */
-    interface SearchParams extends Common.CommonSearchParams {
-      environment?: string | null;
-      customerName?: string | null;
-    }
-
+    /** BOX search params */
+    type SummarySearchParams = CommonType.RecordNullable<
+      Pick<Api.Box.Summary, 'environment' | 'customerName'> & Common.CommonSearchParams
+    >;
     /** create model */
     type CreateSummary = Omit<Summary, keyof Common.CommonRecord>;
 

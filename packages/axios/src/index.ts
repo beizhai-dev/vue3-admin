@@ -62,7 +62,7 @@ function createCommonRequest<ResponseData = any>(
       }
 
       const backendError = new AxiosError<ResponseData>(
-        'the backend request error',
+        response?.data?.data?.message || response?.data?.message || 'the backend request error',
         BACKEND_ERROR_CODE,
         response.config,
         response.request,

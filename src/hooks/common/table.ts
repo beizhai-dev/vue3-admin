@@ -10,13 +10,22 @@ type TableData = NaiveUI.TableData;
 type GetTableData<A extends NaiveUI.TableApiFn> = NaiveUI.GetTableData<A>;
 type TableColumn<T> = NaiveUI.TableColumn<T>;
 
+type PaginationInfo = {
+  startIndex: number;
+  endIndex: number;
+  page: number;
+  pageSize: number;
+  pageCount: number;
+  itemCount: number | undefined;
+};
+
 export function useTable<A extends NaiveUI.TableApiFn>(config: NaiveUI.NaiveTableConfig<A>) {
   const scope = effectScope();
   const appStore = useAppStore();
 
   const isMobile = computed(() => appStore.isMobile);
 
-  const { apiFn, apiParams, immediate, showTotal } = config;
+  const { apiFn, apiParams, immediate, showTotal, needPagination = true } = config;
 
   const SELECTION_KEY = '__selection__';
 
@@ -38,23 +47,35 @@ export function useTable<A extends NaiveUI.TableApiFn>(config: NaiveUI.NaiveTabl
     apiParams,
     columns: config.columns,
     transformer: res => {
-      const { records = [], current = 1, size = 10, total = 0 } = res.data || {};
+      if (!needPagination) {
+        const items = Array.isArray(res.data) ? res.data : [];
+        return {
+          data: items.map((item, index) => ({
+            ...item,
+            index: index + 1
+          })),
+          pageNum: 1,
+          pageSize: items.length,
+          total: items.length
+        };
+      }
 
-      // Ensure that the size is greater than 0, If it is less than 0, it will cause paging calculation errors.
-      const pageSize = size <= 0 ? 10 : size;
+      const { items = [], meta } = res.data || {};
+      const { currentPage = 1, itemsPerPage = 10, totalItems = 0 } = meta || {};
+      const pageSizeNew = itemsPerPage <= 0 ? 10 : itemsPerPage;
 
-      const recordsWithIndex = records.map((item, index) => {
+      const recordsWithIndex = items.map((item, index) => {
         return {
           ...item,
-          index: (current - 1) * pageSize + index + 1
+          index: (currentPage - 1) * pageSizeNew + index + 1
         };
       });
 
       return {
         data: recordsWithIndex,
-        pageNum: current,
-        pageSize,
-        total
+        pageNum: currentPage,
+        pageSize: pageSizeNew,
+        total: totalItems
       };
     },
     getColumnChecks: cols => {
@@ -104,8 +125,9 @@ export function useTable<A extends NaiveUI.TableApiFn>(config: NaiveUI.NaiveTabl
       return filteredColumns;
     },
     onFetched: async transformed => {
-      const { pageNum, pageSize, total } = transformed;
+      if (!needPagination) return;
 
+      const { pageNum, pageSize, total } = transformed;
       updatePagination({
         page: pageNum,
         pageSize,
@@ -115,41 +137,44 @@ export function useTable<A extends NaiveUI.TableApiFn>(config: NaiveUI.NaiveTabl
     immediate
   });
 
-  const pagination: PaginationProps = reactive({
-    page: 1,
-    pageSize: 10,
-    showSizePicker: true,
-    pageSizes: [10, 15, 20, 25, 30],
-    onUpdatePage: async (page: number) => {
-      pagination.page = page;
+  const pagination: PaginationProps | null = needPagination
+    ? reactive({
+        page: 1,
+        pageSize: 10,
+        showSizePicker: true,
+        pageSizes: [10, 15, 20, 25, 30],
+        onUpdatePage: async (page: number) => {
+          pagination!.page = page;
 
-      updateSearchParams({
-        current: page,
-        size: pagination.pageSize!
-      });
+          updateSearchParams({
+            page,
+            pageSize: pagination!.pageSize!
+          });
 
-      getData();
-    },
-    onUpdatePageSize: async (pageSize: number) => {
-      pagination.pageSize = pageSize;
-      pagination.page = 1;
+          getData();
+        },
+        onUpdatePageSize: async (pageSize: number) => {
+          pagination!.pageSize = pageSize;
+          pagination!.page = 1;
 
-      updateSearchParams({
-        current: pagination.page,
-        size: pageSize
-      });
+          updateSearchParams({
+            page: pagination!.page,
+            pageSize
+          });
 
-      getData();
-    },
-    ...(showTotal
-      ? {
-          prefix: page => $t('datatable.itemCount', { total: page.itemCount })
-        }
-      : {})
-  });
+          getData();
+        },
+        ...(showTotal
+          ? {
+              prefix: (info: PaginationInfo) => $t('datatable.itemCount', { total: info.itemCount || 0 })
+            }
+          : {})
+      })
+    : null;
 
-  // this is for mobile, if the system does not support mobile, you can use `pagination` directly
   const mobilePagination = computed(() => {
+    if (!pagination) return false;
+
     const p: PaginationProps = {
       ...pagination,
       pageSlot: isMobile.value ? 3 : 9,
@@ -160,7 +185,9 @@ export function useTable<A extends NaiveUI.TableApiFn>(config: NaiveUI.NaiveTabl
   });
 
   function updatePagination(update: Partial<PaginationProps>) {
-    Object.assign(pagination, update);
+    if (pagination) {
+      Object.assign(pagination, update);
+    }
   }
 
   /**
@@ -174,8 +201,8 @@ export function useTable<A extends NaiveUI.TableApiFn>(config: NaiveUI.NaiveTabl
     });
 
     updateSearchParams({
-      current: pageNum,
-      size: pagination.pageSize!
+      page: pageNum,
+      pageSize: pagination?.pageSize
     });
 
     await getData();

@@ -5,7 +5,7 @@ import { request } from '../request';
  *
  * @param id Box ID
  */
-export function fetchBoxSummary(params: Api.Box.SearchParams) {
+export function fetchBoxSummary(params: Api.Box.SummarySearchParams) {
   return request<Api.Box.SummaryList>({
     url: `/box/summary`,
     method: 'get',
@@ -20,8 +20,8 @@ export function fetchBoxSummary(params: Api.Box.SearchParams) {
  * @param data Summary data
  */
 export function createBoxSummary(data: Api.Box.CreateSummary) {
-  return request<void>({
-    url: `/box/addSummary`,
+  return request({
+    url: `/box/summary`,
     method: 'post',
     data
   });
@@ -33,9 +33,9 @@ export function createBoxSummary(data: Api.Box.CreateSummary) {
  * @param boxId Box ID
  * @param data Summary data to update
  */
-export function updateBoxSummary(data: Api.Box.UpdateSummary) {
-  return request<void>({
-    url: `/box/editSummary`,
+export function updateBoxSummary(id: number, data: Api.Box.UpdateSummary) {
+  return request({
+    url: `/box/summary/${id}`,
     method: 'post',
     data
   });
@@ -46,12 +46,34 @@ export function updateBoxSummary(data: Api.Box.UpdateSummary) {
  *
  * @param boxId Box ID
  */
-export function deleteBoxSummary(boxId: number) {
-  return request<void>({
-    url: `/box/summary`,
+export function deleteBoxSummary(id: number) {
+  return request({
+    url: `/box/summary/delete/${id}`,
+    method: 'post'
+  });
+}
+
+/**
+ * Get box summary detail by ID
+ *
+ * @param id Box summary ID
+ */
+export function fetchBoxSummaryById(id: number) {
+  return request<Api.Box.Summary>({
+    url: `/box/summary/${id}`,
+    method: 'get'
+  });
+}
+
+/**
+ * Batch delete box summaries
+ *
+ * @param ids Box summary IDs
+ */
+export function batchDeleteBoxSummary(ids: string[]) {
+  return request({
+    url: '/box/summary/batchDelete',
     method: 'post',
-    data: {
-      boxId
-    }
+    data: ids
   });
 }

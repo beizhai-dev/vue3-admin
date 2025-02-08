@@ -2,7 +2,7 @@
 import { getRgb } from '@sa/color';
 import { $t } from '@/locales';
 import { localStg } from '@/utils/storage';
-import systemLogo from '@/assets/svg-icon/logo.svg?raw';
+// import systemLogo from '@/assets/svg-icon/logo.svg?raw';
 
 export function setupLoading() {
   const themeColor = localStg.get('themeColor') || '#646cff';
@@ -18,7 +18,7 @@ export function setupLoading() {
     'right-0 bottom-0 animate-delay-1500'
   ];
 
-  const logoWithClass = systemLogo.replace('<svg', `<svg class="size-128px text-primary"`);
+  const logoWithClass = ''; // systemLogo.replace('<svg', `<svg class="size-128px text-primary"`);
 
   const dot = loadingClasses
     .map(item => {

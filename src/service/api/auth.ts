@@ -3,17 +3,14 @@ import { request } from '../request';
 /**
  * Login
  *
- * @param userName User name
+ * @param username User name
  * @param password Password
  */
-export function fetchLogin(userName: string, password: string) {
+export function fetchLogin(params: Api.Auth.LoginParams) {
   return request<Api.Auth.LoginToken>({
     url: '/auth/login',
     method: 'post',
-    data: {
-      userName,
-      password
-    }
+    data: params
   });
 }
 
@@ -45,4 +42,9 @@ export function fetchRefreshToken(refreshToken: string) {
  */
 export function fetchCustomBackendError(code: string, msg: string) {
   return request({ url: '/auth/error', params: { code, msg } });
+}
+
+/** 获取验证码图片 */
+export function getCaptchaImg(params: { width: number; height: number }) {
+  return request<Api.Auth.CaptchaResult>({ url: '/auth/captcha/img', params });
 }

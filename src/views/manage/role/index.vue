@@ -23,8 +23,8 @@ const {
 } = useTable({
   apiFn: fetchGetRoleList,
   apiParams: {
-    current: 1,
-    size: 10,
+    page: 1,
+    pageSize: 10,
     // if you want to use the searchParams in Form, you need to define the following properties, and the value is null
     // the value can not be undefined, otherwise the property in Form will not be reactive
     status: null,
@@ -90,6 +90,9 @@ const {
           <NButton type="primary" ghost size="small" onClick={() => edit(row.id)}>
             {$t('common.edit')}
           </NButton>
+          <NButton type="primary" ghost size="small" onClick={() => auth(row.id)}>
+            {$t('common.auth')}
+          </NButton>
           <NPopconfirm onPositiveClick={() => handleDelete(row.id)}>
             {{
               default: () => $t('common.confirmDelete'),
@@ -133,6 +136,9 @@ function handleDelete(id: number) {
 }
 
 function edit(id: number) {
+  handleEdit(id);
+}
+function auth(id: number) {
   handleEdit(id);
 }
 </script>

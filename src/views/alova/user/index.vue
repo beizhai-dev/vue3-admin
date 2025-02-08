@@ -17,7 +17,7 @@ const searchParams = reactive({
   // if you want to use the searchParams in Form, you need to define the following properties, and the value is null
   // the value can not be undefined, otherwise the property in Form will not be reactive
   status: null,
-  userName: null,
+  username: null,
   userGender: null,
   nickName: null,
   userPhone: null,
@@ -27,12 +27,12 @@ const { loading, data, refresh, reload, page, pageSize, pageCount, send, remove 
   (pageNum, size) =>
     fetchGetUserList({
       ...searchParams,
-      current: pageNum,
-      size
+      page: pageNum,
+      pageSize: size
     }),
   {
-    data: ({ records }) => records,
-    total: ({ total }) => total,
+    data: ({ items }) => items,
+    total: ({ meta }) => meta.totalItems,
 
     // trigger reload when states in `searchParams` changed
     watchingStates: [searchParams],
@@ -80,8 +80,8 @@ const { columnChecks, columns } = useCheckedColumns<typeof fetchGetUserList>(() 
     width: 48
   },
   {
-    key: 'userName',
-    title: $t('page.manage.user.userName'),
+    key: 'username',
+    title: $t('page.manage.user.username'),
     align: 'center',
     minWidth: 100
   },

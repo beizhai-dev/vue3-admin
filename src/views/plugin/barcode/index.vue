@@ -3,7 +3,7 @@ import JsBarcode from 'jsbarcode';
 import type { Options } from 'jsbarcode';
 import { onMounted } from 'vue';
 
-const text = 'Soybean';
+const text = 'Xencio';
 
 interface CodeConfig {
   id: string;

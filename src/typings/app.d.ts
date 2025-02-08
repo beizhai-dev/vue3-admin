@@ -292,6 +292,7 @@ declare namespace App {
       common: {
         action: string;
         add: string;
+        auth: string;
         addSuccess: string;
         backToHome: string;
         batchDelete: string;
@@ -304,6 +305,7 @@ declare namespace App {
         confirm: string;
         delete: string;
         deleteSuccess: string;
+        deleteError: string;
         confirmDelete: string;
         edit: string;
         warning: string;
@@ -403,7 +405,7 @@ declare namespace App {
         login: {
           common: {
             loginOrRegister: string;
-            userNamePlaceholder: string;
+            usernamePlaceholder: string;
             phonePlaceholder: string;
             codePlaceholder: string;
             passwordPlaceholder: string;
@@ -566,7 +568,7 @@ declare namespace App {
           };
           user: {
             title: string;
-            userName: string;
+            username: string;
             userGender: string;
             nickName: string;
             userPhone: string;
@@ -574,7 +576,7 @@ declare namespace App {
             userStatus: string;
             userRole: string;
             form: {
-              userName: string;
+              username: string;
               userGender: string;
               nickName: string;
               userPhone: string;
@@ -596,6 +598,8 @@ declare namespace App {
             parentId: string;
             menuType: string;
             menuName: string;
+            permissionName: string;
+            directoryName: string;
             routeName: string;
             routePath: string;
             pathParam: string;
@@ -625,6 +629,9 @@ declare namespace App {
               routeName: string;
               routePath: string;
               pathParam: string;
+              permission: string;
+              permissionName: string;
+              directoryName: string;
               layout: string;
               page: string;
               i18nKey: string;
@@ -648,9 +655,11 @@ declare namespace App {
             addMenu: string;
             editMenu: string;
             addChildMenu: string;
+            addPermission: string;
             type: {
               directory: string;
               menu: string;
+              permission: string;
             };
             iconType: {
               iconify: string;
@@ -662,12 +671,18 @@ declare namespace App {
           summary: {
             addService: string;
             editService: string;
+            environment: {
+              X: string;
+              GO: string;
+              ICBC: string;
+              LOCAL: string;
+            };
           };
         };
       };
       form: {
         required: string;
-        userName: FormMsg;
+        username: FormMsg;
         phone: FormMsg;
         pwd: FormMsg;
         confirmPwd: FormMsg;
@@ -746,7 +761,7 @@ declare namespace App {
       /** The backend service response code */
       code: string;
       /** The backend service response message */
-      msg: string;
+      message: string;
       /** The backend service response data */
       data: T;
     };

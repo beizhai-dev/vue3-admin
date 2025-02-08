@@ -24,7 +24,7 @@ export function fetchGetAllRoles() {
 /** get user list */
 export function fetchGetUserList(params?: Api.SystemManage.UserSearchParams) {
   return request<Api.SystemManage.UserList>({
-    url: '/systemManage/getUserList',
+    url: '/system/users',
     method: 'get',
     params
   });
@@ -33,7 +33,7 @@ export function fetchGetUserList(params?: Api.SystemManage.UserSearchParams) {
 /** get menu list */
 export function fetchGetMenuList() {
   return request<Api.SystemManage.MenuList>({
-    url: '/systemManage/getMenuList/v2',
+    url: '/system/menus',
     method: 'get'
   });
 }
@@ -51,5 +51,39 @@ export function fetchGetMenuTree() {
   return request<Api.SystemManage.MenuTree[]>({
     url: '/systemManage/getMenuTree',
     method: 'get'
+  });
+}
+
+/** add menu */
+export function fetchAddMenu(params: Partial<Api.SystemManage.Menu>) {
+  return request<Api.Common.CommonOperateResponse>({
+    url: '/system/menus',
+    method: 'post',
+    data: params
+  });
+}
+
+/** update menu */
+export function fetchUpdateMenu(id: number, params: Partial<Api.SystemManage.Menu>) {
+  return request<Api.Common.CommonOperateResponse>({
+    url: `/system/menus/${id}`,
+    method: 'post',
+    data: params
+  });
+}
+
+/** delete menu */
+export function fetchDeleteMenu(id: number) {
+  return request<Api.Common.CommonOperateResponse>({
+    url: `/system/menus/delete/${id}`,
+    method: 'post'
+  });
+}
+/** batch delete menu */
+export function fetchBatchDeleteMenu(ids: string[]) {
+  return request<Api.Common.CommonOperateResponse>({
+    url: '/system/menus/batchDelete',
+    method: 'post',
+    data: ids
   });
 }

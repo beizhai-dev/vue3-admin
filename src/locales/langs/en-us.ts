@@ -9,6 +9,7 @@ const local: App.I18n.Schema = {
   common: {
     action: 'Action',
     add: 'Add',
+    auth: 'Auth',
     addSuccess: 'Add Success',
     backToHome: 'Back to home',
     batchDelete: 'Batch Delete',
@@ -21,6 +22,7 @@ const local: App.I18n.Schema = {
     confirm: 'Confirm',
     delete: 'Delete',
     deleteSuccess: 'Delete Success',
+    deleteError: 'Delete Error',
     confirmDelete: 'Are you sure you want to delete?',
     edit: 'Edit',
     warning: 'Warning',
@@ -231,7 +233,7 @@ const local: App.I18n.Schema = {
     login: {
       common: {
         loginOrRegister: 'Login / Register',
-        userNamePlaceholder: 'Please enter user name',
+        usernamePlaceholder: 'Please enter user name',
         phonePlaceholder: 'Please enter phone number',
         codePlaceholder: 'Please enter verification code',
         passwordPlaceholder: 'Please enter password',
@@ -241,7 +243,7 @@ const local: App.I18n.Schema = {
         back: 'Back',
         validateSuccess: 'Verification passed',
         loginSuccess: 'Login successfully',
-        welcomeBack: 'Welcome back, {userName} !'
+        welcomeBack: 'Welcome back, {username} !'
       },
       pwdLogin: {
         title: 'Password Login',
@@ -276,7 +278,7 @@ const local: App.I18n.Schema = {
     },
     about: {
       title: 'About',
-      introduction: `SoybeanAdmin is an elegant and powerful admin template, based on the latest front-end technology stack, including Vue3, Vite5, TypeScript, Pinia and UnoCSS. It has built-in rich theme configuration and components, strict code specifications, and an automated file routing system. In addition, it also uses the online mock data solution based on ApiFox. SoybeanAdmin provides you with a one-stop admin solution, no additional configuration, and out of the box. It is also a best practice for learning cutting-edge technologies quickly.`,
+      introduction: `XencioAdmin is an elegant and powerful admin template, based on the latest front-end technology stack, including Vue3, Vite5, TypeScript, Pinia and UnoCSS. It has built-in rich theme configuration and components, strict code specifications, and an automated file routing system. In addition, it also uses the online mock data solution based on ApiFox. XencioAdmin provides you with a one-stop admin solution, no additional configuration, and out of the box. It is also a best practice for learning cutting-edge technologies quickly.`,
       projectInfo: {
         title: 'Project Info',
         version: 'Version',
@@ -290,7 +292,7 @@ const local: App.I18n.Schema = {
     home: {
       branchDesc:
         'For the convenience of everyone in developing and updating the merge, we have streamlined the code of the main branch, only retaining the homepage menu, and the rest of the content has been moved to the example branch for maintenance. The preview address displays the content of the example branch.',
-      greeting: 'Good morning, {userName}, today is another day full of vitality!',
+      greeting: 'Good morning, {username}, today is another day full of vitality!',
       weatherDesc: 'Today is cloudy to clear, 20℃ - 25℃!',
       projectCount: 'Project Count',
       todo: 'Todo',
@@ -308,11 +310,11 @@ const local: App.I18n.Schema = {
       projectNews: {
         title: 'Project News',
         moreNews: 'More News',
-        desc1: 'Soybean created the open source project soybean-admin on May 28, 2021!',
-        desc2: 'Yanbowe submitted a bug to soybean-admin, the multi-tab bar will not adapt.',
-        desc3: 'Soybean is ready to do sufficient preparation for the release of soybean-admin!',
-        desc4: 'Soybean is busy writing project documentation for soybean-admin!',
-        desc5: 'Soybean just wrote some of the workbench pages casually, and it was enough to see!'
+        desc1: 'Xencio created the open source project Xencio-admin on May 28, 2021!',
+        desc2: 'Yanbowe submitted a bug to Xencio-admin, the multi-tab bar will not adapt.',
+        desc3: 'Xencio is ready to do sufficient preparation for the release of Xencio-admin!',
+        desc4: 'Xencio is busy writing project documentation for Xencio-admin!',
+        desc5: 'Xencio just wrote some of the workbench pages casually, and it was enough to see!'
       },
       creativity: 'Creativity'
     },
@@ -395,7 +397,7 @@ const local: App.I18n.Schema = {
       },
       user: {
         title: 'User List',
-        userName: 'User Name',
+        username: 'User Name',
         userGender: 'Gender',
         nickName: 'Nick Name',
         userPhone: 'Phone Number',
@@ -403,7 +405,7 @@ const local: App.I18n.Schema = {
         userStatus: 'User Status',
         userRole: 'User Role',
         form: {
-          userName: 'Please enter user name',
+          username: 'Please enter user name',
           userGender: 'Please select gender',
           nickName: 'Please enter nick name',
           userPhone: 'Please enter phone number',
@@ -418,12 +420,6 @@ const local: App.I18n.Schema = {
           female: 'Female'
         }
       },
-      box: {
-        summary: {
-          addService: 'add box service',
-          editService: 'edit box service'
-        }
-      },
       menu: {
         home: 'Home',
         title: 'Menu List',
@@ -431,6 +427,8 @@ const local: App.I18n.Schema = {
         parentId: 'Parent ID',
         menuType: 'Menu Type',
         menuName: 'Menu Name',
+        permissionName: 'Permission Name',
+        directoryName: 'Directory Name',
         routeName: 'Route Name',
         routePath: 'Route Path',
         pathParam: 'Path Param',
@@ -457,9 +455,12 @@ const local: App.I18n.Schema = {
           home: 'Please select home',
           menuType: 'Please select menu type',
           menuName: 'Please enter menu name',
+          permissionName: 'Please enter permission name',
+          directoryName: 'Please enter directory name',
           routeName: 'Please enter route name',
           routePath: 'Please enter route path',
           pathParam: 'Please enter path param',
+          permission: 'Please enter permission code',
           page: 'Please select page component',
           layout: 'Please select layout component',
           i18nKey: 'Please enter i18n key',
@@ -483,20 +484,34 @@ const local: App.I18n.Schema = {
         addMenu: 'Add Menu',
         editMenu: 'Edit Menu',
         addChildMenu: 'Add Child Menu',
+        addPermission: 'Add Permission',
         type: {
           directory: 'Directory',
-          menu: 'Menu'
+          menu: 'Menu',
+          permission: 'Permission'
         },
         iconType: {
           iconify: 'Iconify Icon',
           local: 'Local Icon'
         }
       }
+    },
+    box: {
+      summary: {
+        addService: 'add box service',
+        editService: 'edit box service',
+        environment: {
+          X: 'X',
+          GO: 'GO',
+          ICBC: 'ICBC SAAS',
+          LOCAL: 'Local Customer  '
+        }
+      }
     }
   },
   form: {
     required: 'Cannot be empty',
-    userName: {
+    username: {
       required: 'Please enter user name',
       invalid: 'User name format is incorrect'
     },

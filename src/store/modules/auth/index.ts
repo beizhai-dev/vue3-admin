@@ -22,7 +22,7 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
 
   const userInfo: Api.Auth.UserInfo = reactive({
     userId: '',
-    userName: '',
+    username: '',
     roles: [],
     buttons: []
   });
@@ -53,28 +53,21 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
     routeStore.resetStore();
   }
 
-  /**
-   * Login
-   *
-   * @param userName User name
-   * @param password Password
-   * @param [redirect=true] Whether to redirect after login. Default is `true`
-   */
-  async function login(userName: string, password: string, redirect = true) {
+  /** Login */
+  async function login(params: Api.Auth.LoginParams) {
     startLoading();
 
-    const { data: loginToken, error } = await fetchLogin(userName, password);
-
+    const { data: loginToken, error } = await fetchLogin(params);
     if (!error) {
       const pass = await loginByToken(loginToken);
 
       if (pass) {
-        await redirectFromLogin(redirect);
+        await redirectFromLogin(true);
 
         if (routeStore.isInitAuthRoute) {
           window.$notification?.success({
             title: $t('page.login.common.loginSuccess'),
-            content: $t('page.login.common.welcomeBack', { userName: userInfo.userName }),
+            content: $t('page.login.common.welcomeBack', { username: userInfo.username }),
             duration: 4500
           });
         }

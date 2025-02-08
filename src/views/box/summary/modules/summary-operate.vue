@@ -2,7 +2,8 @@
 import { computed, ref, watch } from 'vue';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
-
+import { ENVIRONMENT_OPTIONS } from '@/views/box/summary/dict';
+import { createBoxSummary, updateBoxSummary } from '@/service/api';
 defineOptions({
   name: 'BoxSummaryOperate'
 });
@@ -15,7 +16,12 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-
+const environmentOptions = computed(() =>
+  ENVIRONMENT_OPTIONS.map(item => ({
+    label: item.label(),
+    value: item.value
+  }))
+);
 interface Emits {
   (e: 'submitted'): void;
 }
@@ -37,13 +43,8 @@ const title = computed(() => {
   return titles[props.operateType];
 });
 
-const environmentOptions = [
-  { label: 'X', value: 'X' },
-  { label: 'GO', value: 'GO' },
-  { label: 'ICBC', value: 'ICBC' }
-];
-
 type Model = {
+  id?: number;
   environment: string | null;
   isMultiTenant: boolean;
   customerName: string;
@@ -99,8 +100,14 @@ function closeDrawer() {
 
 async function handleSubmit() {
   await validate();
-  // TODO: Add API call here
-  window.$message?.success($t('common.updateSuccess'));
+  // 提交接口
+  if (props.operateType === 'add') {
+    await createBoxSummary(model.value);
+    window.$message?.success($t('common.addSuccess'));
+  } else {
+    await updateBoxSummary(props.rowData?.id || 0, model.value);
+    window.$message?.success($t('common.updateSuccess'));
+  }
   closeDrawer();
   emit('submitted');
 }

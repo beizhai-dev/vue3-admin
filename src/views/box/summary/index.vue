@@ -1,9 +1,10 @@
 <script setup lang="tsx">
 import { NButton, NPopconfirm, NTag } from 'naive-ui';
-import { fetchBoxSummary } from '@/service/api';
+import { batchDeleteBoxSummary, deleteBoxSummary, fetchBoxSummary } from '@/service/api';
 import { $t } from '@/locales';
 import { useAppStore } from '@/store/modules/app';
 import { useTable, useTableOperate } from '@/hooks/common/table';
+import { ENVIRONMENT_MAP } from '@/views/box/summary/dict';
 import BoxSummaryOperate from './modules/summary-operate.vue';
 import BoxSummarySearch from './modules/summary-search.vue';
 
@@ -23,8 +24,8 @@ const {
   apiFn: fetchBoxSummary,
   showTotal: true,
   apiParams: {
-    current: 1,
-    size: 10,
+    page: 1,
+    pageSize: 10,
     environment: null,
     customerName: null
   },
@@ -44,7 +45,10 @@ const {
       key: 'environment',
       title: '所属环境',
       align: 'center',
-      width: 100
+      width: 100,
+      render: row => {
+        return <NTag>{ENVIRONMENT_MAP[row.environment]()}</NTag>;
+      }
     },
     {
       key: 'isMultiTenant',
@@ -58,13 +62,20 @@ const {
     {
       key: 'customerName',
       title: '客户名称',
-      align: 'center',
+      ellipsis: {
+        tooltip: true
+      },
+      align: 'left',
       minWidth: 150
     },
     {
       key: 'serviceUrl',
       title: '服务地址',
-      align: 'center',
+      minWidth: 200,
+      ellipsis: {
+        tooltip: true
+      },
+      align: 'left',
       render: row => (
         <NButton text type="primary" onClick={() => window.open(row.serviceUrl)} disabled={!row.serviceUrl}>
           {row.serviceUrl || '暂无'}
@@ -74,13 +85,16 @@ const {
     {
       key: 'username',
       title: '登录用户名',
-      align: 'center',
+      ellipsis: {
+        tooltip: true
+      },
+      align: 'left',
       width: 120
     },
     {
       key: 'remark',
       title: '备注',
-      align: 'center',
+      align: 'left',
       minWidth: 150
     },
     {
@@ -132,16 +146,12 @@ const {
 } = useTableOperate(data, getData);
 
 async function handleBatchDelete() {
-  // request
-  console.log(checkedRowKeys.value);
-
+  await batchDeleteBoxSummary(checkedRowKeys.value);
   onBatchDeleted();
 }
 
-function handleDelete(id: number) {
-  // request
-  console.log(id);
-
+async function handleDelete(id: number) {
+  await deleteBoxSummary(id);
   onDeleted();
 }
 

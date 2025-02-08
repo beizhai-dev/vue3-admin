@@ -23,13 +23,13 @@ declare module 'vue-router' {
      */
     roles?: string[];
     /** Whether to cache the route */
-    keepAlive?: boolean | null;
+    keepAlive?: number | null;
     /**
      * Is constant route
      *
      * when it is set to true, there will be no login verification and no permission verification to access the route
      */
-    constant?: boolean | null;
+    constant?: number | null;
     /**
      * Iconify icon
      *
@@ -45,11 +45,11 @@ declare module 'vue-router' {
     /** Icon size. width and height are the same. */
     iconFontSize?: number;
     /** Router order */
-    order?: number | null;
+    orderNo?: number | null;
     /** The outer link of the route */
     href?: string | null;
     /** Whether to hide the route in the menu */
-    hideInMenu?: boolean | null;
+    hideInMenu?: number | null;
     /**
      * The menu key will be activated when entering the route
      *
@@ -63,7 +63,7 @@ declare module 'vue-router' {
      * By default, the same route path will use one tab, even with different query, if set true, the route with
      * different query will use different tabs
      */
-    multiTab?: boolean | null;
+    multiTab?: number | null;
     /** If set, the route will be fixed in tabs, and the value is the order of fixed tabs */
     fixedIndexInTab?: number | null;
     /** if set query parameters, it will be automatically carried when entering the route */

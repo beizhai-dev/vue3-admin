@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 import { $t } from '@/locales';
 import { useNaiveForm } from '@/hooks/common/form';
-
+import { ENVIRONMENT_OPTIONS } from '@/views/box/summary/dict';
 defineOptions({
   name: 'BoxSummarySearch'
 });
@@ -13,19 +13,15 @@ interface Emits {
 }
 
 const emit = defineEmits<Emits>();
-
+const environmentOptions = computed(() =>
+  ENVIRONMENT_OPTIONS.map(item => ({
+    label: item.label(),
+    value: item.value
+  }))
+);
 const { formRef, validate, restoreValidation } = useNaiveForm();
 
-const model = defineModel<{
-  environment: string | null;
-  customerName: string | null;
-}>('model', { required: true });
-
-const environmentOptions = [
-  { label: 'X环境', value: 'X' },
-  { label: 'GO环境', value: 'GO' },
-  { label: 'ICBC环境', value: 'ICBC' }
-];
+const model = defineModel<Api.Box.SummarySearchParams>('model', { required: true });
 
 async function reset() {
   await restoreValidation();
